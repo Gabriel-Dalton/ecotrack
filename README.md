@@ -25,28 +25,17 @@ git clone https://github.com/Gabriel-Dalton/ecotrack.git
 cd ecotrack
 ```
 
-### 2. Install Dependencies
+### 2. Run the Application
 
-```bash
-npm install
-```
+1. Open the project in your code editor (e.g., VS Code).
+2. Use the **Live Server** extension or a similar tool to serve the `index.html` file.
 
-### 3. Run the Application
-
-```bash
-node app.js
-```
+That's it! The application is built using just HTML, CSS, and JavaScript, so no additional setup is required.
 
 ## Project Structure
 
-- **app.js**: Contains the Express.js server logic, including routes for adding data and serving the frontend.
+- **app.js**: Contains the JavaScript server logic.
 - **public/index.html**: The main frontend file displaying the UI for EcoTrack.
-
-## API Endpoints
-
-- **POST /add**: Adds a new tree and/or plastic bottle count to the totals.
-- **GET /**: Serves the main EcoTrack dashboard.
-- **GET /download**: Downloads the current data as a JSON file.
 
 ## Contributing
 
