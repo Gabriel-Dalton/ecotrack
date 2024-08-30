@@ -2,6 +2,9 @@
 
 EcoTrack is a web application designed to track the number of trees planted and plastic bottles prevented from entering the ocean. This tool helps users contribute to environmental conservation by providing detailed records of their efforts and generating comprehensive summaries of their impact.
 
+![image](https://github.com/user-attachments/assets/80e12081-05a2-4129-aed9-5476ddfa52fb)
+
+
 ## Objective
 
 Develop a user-friendly application that:
