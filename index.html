@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrack Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+         body { 
+            background-color: #f0fff4; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        .card { background-color: #d1fae5; border-color: #10b981; }
+        .dropzone { border: 2px dashed #10b981; padding: 20px; margin-top: 20px; text-align: center; cursor: pointer; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg card">
+        <h1 class="text-3xl font-bold text-green-700 mb-4">EcoTrack Dashboard</h1>
+        <p class="text-green-700">Total Trees Planted: <span id="treesCounter">0</span></p>
+        <p class="text-green-700">Total Bottles Prevented: <span id="bottlesCounter">0</span></p>
+        <form>
+            <label for="trees" class="text-green-700">Trees Planted:</label>
+            <input type="number" id="trees" name="trees" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50">
+            <label for="bottles" class="text-green-700 mt-2">Bottles Prevented:</label>
+            <input type="number" id="bottles" name="bottles" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 mt-1">
+            <button type="submit" class="mt-4 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">Submit</button>
+        </form>
+        <div id="dropzone" class="dropzone">
+            <p class="text-green-700">Drag and drop JSON file here or click to upload</p>
+        </div>
+        <button id="editButton" class="mt-4 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 hidden">Edit JSON</button>
+        <button id="downloadButton" class="mt-4 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">Download JSON</button>
+    </div>
+
+    <div id="editModal" class="hidden fixed z-10 inset-0 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modalTitle">Edit JSON Data</h3>
+                            <div class="mt-2">
+                                <label for="modalTrees" class="block text-sm font-medium text-gray-700">Trees Planted:</label>
+                                <input type="number" id="modalTrees" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50">
+                                <label for="modalBottles" class="block text-sm font-medium text-gray-700 mt-4">Bottles Prevented:</label>
+                                <input type="number" id="modalBottles" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button id="saveChanges" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+                    <button id="cancelChanges" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="errorModal" class="hidden fixed z-10 inset-0 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modalTitle">Error</h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">Please enter valid numbers for trees and bottles.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button id="closeErrorModal" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:ml-3 sm:w-auto sm:text-sm">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let treesPlanted = 0;
+        let bottlesPrevented = 0;
+    
+        function updateCounter() {
+            $('#treesCounter').text(treesPlanted);
+            $('#bottlesCounter').text(bottlesPrevented);
+        }
+    
+        function handleFileUpload(file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const data = JSON.parse(e.target.result);
+                treesPlanted = data.treesPlanted || 0;
+                bottlesPrevented = data.bottlesPrevented || 0;
+                updateCounter();
+                $('#editButton').removeClass('hidden');
+            };
+            reader.readAsText(file);
+        }
+    
+        $('#dropzone').on('dragover dragenter', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).addClass('border-green-300');
+        }).on('dragleave dragend', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).removeClass('border-green-300');
+        }).on('drop', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).removeClass('border-green-300');
+            const file = e.originalEvent.dataTransfer.files[0];
+            handleFileUpload(file);
+        }).on('click', function () {
+            const fileInput = $('<input type="file" accept="application/json">');
+            fileInput.on('change', function (e) {
+                const file = e.target.files[0];
+                handleFileUpload(file);
+            });
+            fileInput.click();
+        });
+    
+        $('#editButton').on('click', function () {
+            $('#modalTrees').val(treesPlanted);
+            $('#modalBottles').val(bottlesPrevented);
+            $('#editModal').removeClass('hidden');
+        });
+    
+        $('#saveChanges').on('click', function () {
+            const newTrees = parseInt($('#modalTrees').val());
+            const newBottles = parseInt($('#modalBottles').val());
+            if (isNaN(newTrees) || isNaN(newBottles)) {
+                $('#errorModal').removeClass('hidden');
+                return;
+            }
+            treesPlanted = newTrees;
+            bottlesPrevented = newBottles;
+            updateCounter();
+            $('#editModal').addClass('hidden');
+        });
+    
+        $('#cancelChanges').on('click', function () {
+            $('#editModal').addClass('hidden');
+        });
+    
+        $('#closeErrorModal').on('click', function () {
+            $('#errorModal').addClass('hidden');
+        });
+    
+        $('#downloadButton').on('click', function () {
+    if (treesPlanted === 0 || bottlesPrevented === 0) {
+        alert("Please enter data before downloading.");
+        return;
+    }
+
+    const data = { treesPlanted, bottlesPrevented };
+    const json = JSON.stringify(data);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'data.json';
+    document.body.appendChild(a);
+    a.click();
+    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+});
+
+    
+        $('form').on('submit', function (e) {
+            e.preventDefault();
+            const trees = parseInt($('#trees').val());
+            const bottles = parseInt($('#bottles').val());
+            if (!isNaN(trees)) {
+                treesPlanted += trees;
+            }
+            if (!isNaN(bottles)) {
+                bottlesPrevented += bottles;
+            }
+            updateCounter();
+            $('#trees').val('');
+            $('#bottles').val('');
+        });
+    
+        updateCounter();
+    </script>
+    
+</body>
+</html>
