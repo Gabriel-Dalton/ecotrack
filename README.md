@@ -43,9 +43,9 @@ That's it! The application is built using just HTML, CSS, and JavaScript, so no 
 ## Contributing
 
 1. Fork the repository.
-2. Create your feature branch (`git checkout -b feature/your-feature`).
-3. Commit your changes (`git commit -am 'Add some feature'`).
-4. Push to the branch (`git push origin feature/your-feature`).
+2. Create your feature branch.
+3. Commit your changes.
+4. Push to the branch.
 5. Create a new Pull Request.
 
 ## License
