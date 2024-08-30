@@ -28,49 +28,25 @@ cd ecotrack
 ### 2. Install Dependencies
 
 ```bash
-pip install -r requirements.txt
+npm install
 ```
 
-### 3. Setup the Database
+### 3. Run the Application
 
 ```bash
-flask db init
-flask db migrate
-flask db upgrade
+node app.js
 ```
 
-### 4. Run the Application
+## Project Structure
 
-```bash
-flask run
-```
-
-## Database Schema
-
-### Tables
-
-- **Trees**
-  - `id`: Integer, Primary Key
-  - `method`: String (e.g., Refoorest Chrome Extension, Tree-Nation)
-  - `co2_prevented`: Float (nullable)
-  - `country`: String (nullable)
-  - `certificate`: String (nullable)
-  - `date_planted`: DateTime
-
-- **Plastic_Bottles**
-  - `id`: Integer, Primary Key
-  - `date_added`: DateTime
-
-### Counters
-
-- **Trees_Planted:** Integer
-- **Plastic_Bottles_Prevented:** Integer
+- **app.js**: Contains the Express.js server logic, including routes for adding data and serving the frontend.
+- **public/index.html**: The main frontend file displaying the UI for EcoTrack.
 
 ## API Endpoints
 
-- **POST /add_tree:** Adds a new tree with details.
-- **POST /add_plastic_bottle:** Adds a new plastic bottle to the counter.
-- **GET /stats:** Retrieves summary statistics.
+- **POST /add**: Adds a new tree and/or plastic bottle count to the totals.
+- **GET /**: Serves the main EcoTrack dashboard.
+- **GET /download**: Downloads the current data as a JSON file.
 
 ## Contributing
 
